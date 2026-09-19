@@ -1,2 +1,3 @@
-En esta carpeta estarán las practicas de laboratorio
+En esta carpeta estarán las practicas de laboratorio.
+<br>
 El microcontrolador utilizado es el ESP32-S3-N16R8
