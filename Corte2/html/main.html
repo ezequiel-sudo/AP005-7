@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Programación Aplicada | Ingeniería Electrónica - UDFJC</title>
+
+  <!-- Tipografía limpia y monoespaciada -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS vía CDN (sin instalación) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    /* ============================================================
+       PALETA DE COLORES CENTRALIZADA
+       Cambia estos valores para personalizar todo el diseño:
+    ============================================================ */
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            base: '#09090b',       // Fondo principal
+            surface: '#111114',    // Fondo de bloques/tarjetas
+            subtle: '#18181c',     // Fondo secundario / hover
+            line: '#232329',       // Bordes finos (1px)
+            ink: '#f4f4f5',        // Texto principal
+            muted: '#8e8e98',      // Texto secundario
+            accent: '#e4e4e7',     // Color de acento (cámbialo por tu color)
+          },
+          fontFamily: {
+            sans: ['"Inter"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      background-color: #09090b;
+      color: #f4f4f5;
+    }
+
+    p {
+      color: #808080 !important;
+    }
+
+    /* Fondo lateral izquierdo difuminado por sección */
+    #section-bg-left {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.2) 55%, rgba(0, 0, 0, 0) 100%);
+      mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.2) 55%, rgba(0, 0, 0, 0) 100%);
+      transition: opacity 0.6s ease, background-image 0.6s ease;
+    }
+
+    /* Animación sutil de aparición al hacer scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============================================================
+       SLIDER LATERAL DERECHO (PUNTOS -> ÓVALOS PLANOS)
+    ============================================================ */
+    .dot-nav-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      height: 10px;
+      min-width: 10px;
+      padding: 0;
+      border-radius: 9999px;
+      border: 1px solid #32323a;
+      background-color: #18181c;
+      color: #a1a1aa;
+      transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      cursor: pointer;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .dot-nav-item .nav-label {
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      transition: max-width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                  opacity 0.2s ease,
+                  margin 0.25s ease;
+    }
+
+    /* Estado ACTIVO automático: óvalo desplegado pero pequeño */
+    .dot-nav-item.is-active {
+      height: 22px;
+      padding: 0 9px;
+      background-color: #18181c;
+      border-color: #52525b;
+      color: #f4f4f5;
+    }
+    .dot-nav-item.is-active .nav-dot-core {
+      background-color: #e4e4e7;
+    }
+    .dot-nav-item.is-active .nav-label {
+      max-width: 110px;
+      opacity: 1;
+      margin-left: 6px;
+      font-size: 10px;
+    }
+
+    /* Estado HOVER: se despliega en un óvalo más amplio con el subtítulo */
+    .dot-nav-item:hover {
+      height: 28px !important;
+      padding: 0 13px !important;
+      background-color: #27272a !important;
+      border-color: #a1a1aa !important;
+      color: #ffffff !important;
+    }
+    .dot-nav-item:hover .nav-dot-core {
+      background-color: #ffffff !important;
+    }
+    .dot-nav-item:hover .nav-label {
+      max-width: 240px !important;
+      opacity: 1 !important;
+      margin-left: 8px !important;
+      font-size: 11px !important;
+    }
+  </style>
+</head>
+
+<body class="font-sans antialiased selection:bg-accent selection:text-base">
+
+  <!-- =========================================================
+       SLIDER LATERAL DERECHO CON PUNTOS
+  ========================================================== -->
+  <nav aria-label="Navegación de secciones" class="fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col items-end gap-3">
+    <a href="#inicio" data-section="inicio" data-short="00 · Inicio" data-full="00 · Inicio" class="dot-nav-item is-active">
+      <span class="nav-dot-core w-1.5 h-1.5 rounded-full bg-muted shrink-0 transition-colors"></span>
+      <span class="nav-label">00 · Inicio</span>
+    </a>
+
+    <a href="#python" data-section="python" data-short="01 · Python" data-full="01 · Python como Lenguaje" class="dot-nav-item">
+      <span class="nav-dot-core w-1.5 h-1.5 rounded-full bg-muted shrink-0 transition-colors"></span>
+      <span class="nav-label">01 · Python</span>
+    </a>
+
+    <a href="#esp32" data-section="esp32" data-short="02 · ESP32" data-full="02 · ESP32: C y MicroPython" class="dot-nav-item">
+      <span class="nav-dot-core w-1.5 h-1.5 rounded-full bg-muted shrink-0 transition-colors"></span>
+      <span class="nav-label">02 · ESP32</span>
+    </a>
+
+    <a href="#ia" data-section="ia" data-short="03 · IA" data-full="03 · Perceptrones y Regresión Lineal" class="dot-nav-item">
+      <span class="nav-dot-core w-1.5 h-1.5 rounded-full bg-muted shrink-0 transition-colors"></span>
+      <span class="nav-label">03 · IA</span>
+    </a>
+
+    <a href="#web" data-section="web" data-short="04 · Web" data-full="04 · HTML, CSS y JavaScript" class="dot-nav-item">
+      <span class="nav-dot-core w-1.5 h-1.5 rounded-full bg-muted shrink-0 transition-colors"></span>
+      <span class="nav-label">04 · Web</span>
+    </a>
+
+    <a href="#autor" data-section="autor" data-short="05 · GitHub" data-full="05 · UDFJC &amp; GitHub" class="dot-nav-item">
+      <span class="nav-dot-core w-1.5 h-1.5 rounded-full bg-muted shrink-0 transition-colors"></span>
+      <span class="nav-label">05 · GitHub</span>
+    </a>
+  </nav>
+
+  <!-- BARRA SUPERIOR MINIMALISTA -->
+  <header class="sticky top-0 z-40 bg-base/85 backdrop-blur border-b border-line">
+    <div class="max-w-4xl mx-auto px-5 sm:px-8 h-12 flex items-center justify-between font-mono text-xs text-muted">
+      <span>programacion-aplicada</span>
+      <span>UDFJC · Ingeniería Electrónica</span>
+    </div>
+  </header>
+
+  <!-- Fondo lateral izquierdo dinámico por sección -->
+  <div id="section-bg-left" aria-hidden="true"
+    class="hidden lg:block fixed top-0 left-0 w-[36vw] h-screen pointer-events-none z-0 opacity-0"></div>
+
+  <main class="relative z-10 max-w-4xl mx-auto px-5 sm:px-8 pr-11 sm:pr-14 py-14 sm:py-20 space-y-24 sm:space-y-28">
+
+    <!-- =========================================================
+         00 · INICIO
+    ========================================================== -->
+    <section id="inicio" class="scroll-mt-24 space-y-6">
+      <p class="font-mono text-xs text-muted uppercase tracking-wider">
+        Universidad Distrital Francisco José de Caldas · Ingeniería Electrónica
+      </p>
+
+      <h1 class="text-3xl sm:text-5xl font-semibold tracking-tight text-ink leading-tight">
+        Programación Aplicada
+      </h1>
+
+      <p class="text-base sm:text-lg text-muted leading-relaxed max-w-2xl">
+        Apuntes y síntesis técnica de los temas desarrollados en la asignatura: programación en Python, sistemas embebidos con ESP32, fundamentos de perceptrones con regresión lineal y desarrollo web básico.
+      </p>
+
+      <div class="pt-2 flex flex-wrap gap-3 font-mono text-xs">
+        <a href="#python" class="px-4 py-2 bg-accent text-base font-medium rounded-md hover:opacity-90 transition-opacity">
+          Ver contenidos
+        </a>
+        <a href="#autor" class="px-4 py-2 bg-surface text-ink border border-line rounded-md hover:bg-subtle transition-colors">
+          Repositorio GitHub
+        </a>
+      </div>
+    </section>
+
+    <hr class="border-line" />
+
+    <!-- =========================================================
+         01 · PYTHON COMO LENGUAJE
+    ========================================================== -->
+    <section id="python" class="scroll-mt-24 reveal space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <span class="font-mono text-xs text-muted">01</span>
+          <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-0.5">Python como Lenguaje</h2>
+        </div>
+        <a href="https://www.python.org/" target="_blank" rel="noopener noreferrer"
+           class="font-mono text-xs text-muted hover:text-ink border border-line bg-surface hover:bg-subtle px-3 py-1.5 rounded-md transition-colors self-start sm:self-auto">
+          python.org ↗
+        </a>
+      </div>
+
+      <p class="text-sm sm:text-base text-muted leading-relaxed">
+        Lenguaje interpretado de sintaxis clara y tipado dinámico utilizado para automatización, procesamiento numérico, comunicación serial con hardware y prototipado rápido de algoritmos.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <button type="button" onclick="openPythonModal('variables')"
+          class="p-5 bg-surface border border-line rounded-lg hover:bg-subtle transition-colors text-left space-y-1.5 cursor-pointer group">
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="font-mono text-xs text-ink font-medium">Tipos de Variables</h3>
+            <span class="font-mono text-[11px] text-muted group-hover:text-ink transition-colors">Ver código ↗</span>
+          </div>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Tipado dinámico con enteros (<code class="font-mono text-ink">int</code>), flotantes (<code class="font-mono text-ink">float</code>), cadenas (<code class="font-mono text-ink">str</code>), booleanos (<code class="font-mono text-ink">bool</code>) y <code class="font-mono text-ink">None</code>.
+          </p>
+        </button>
+
+        <button type="button" onclick="openPythonModal('operadores')"
+          class="p-5 bg-surface border border-line rounded-lg hover:bg-subtle transition-colors text-left space-y-1.5 cursor-pointer group">
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="font-mono text-xs text-ink font-medium">Operadores</h3>
+            <span class="font-mono text-[11px] text-muted group-hover:text-ink transition-colors">Ver código ↗</span>
+          </div>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Aritméticos (<code class="font-mono text-ink">+</code>, <code class="font-mono text-ink">//</code>, <code class="font-mono text-ink">**</code>), de comparación (<code class="font-mono text-ink">==</code>, <code class="font-mono text-ink">&lt;=</code>), lógicos (<code class="font-mono text-ink">and</code>, <code class="font-mono text-ink">or</code>, <code class="font-mono text-ink">not</code>) y de asignación.
+          </p>
+        </button>
+
+        <button type="button" onclick="openPythonModal('colecciones')"
+          class="p-5 bg-surface border border-line rounded-lg hover:bg-subtle transition-colors text-left space-y-1.5 cursor-pointer group">
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="font-mono text-xs text-ink font-medium">Listas, Tuplas, Sets y Diccionarios</h3>
+            <span class="font-mono text-[11px] text-muted group-hover:text-ink transition-colors">Ver código ↗</span>
+          </div>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Estructuras integradas: listas mutables, tuplas inmutables, conjuntos sin duplicados y diccionarios clave-valor.
+          </p>
+        </button>
+
+        <button type="button" onclick="openPythonModal('condicionales')"
+          class="p-5 bg-surface border border-line rounded-lg hover:bg-subtle transition-colors text-left space-y-1.5 cursor-pointer group">
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="font-mono text-xs text-ink font-medium">Condicionales: if, else y match</h3>
+            <span class="font-mono text-[11px] text-muted group-hover:text-ink transition-colors">Ver código ↗</span>
+          </div>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Control de flujo mediante <code class="font-mono text-ink">if / elif / else</code> y coincidencia de patrones con <code class="font-mono text-ink">match / case</code>.
+          </p>
+        </button>
+
+        <button type="button" onclick="openPythonModal('bucles')"
+          class="p-5 bg-surface border border-line rounded-lg hover:bg-subtle transition-colors text-left space-y-1.5 cursor-pointer group">
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="font-mono text-xs text-ink font-medium">Bucles: while y for</h3>
+            <span class="font-mono text-[11px] text-muted group-hover:text-ink transition-colors">Ver código ↗</span>
+          </div>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Iteración por condición con <code class="font-mono text-ink">while</code> y recorrido de secuencias o rangos con <code class="font-mono text-ink">for</code>, <code class="font-mono text-ink">break</code> y <code class="font-mono text-ink">continue</code>.
+          </p>
+        </button>
+
+        <button type="button" onclick="openPythonModal('funciones')"
+          class="p-5 bg-surface border border-line rounded-lg hover:bg-subtle transition-colors text-left space-y-1.5 cursor-pointer group">
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="font-mono text-xs text-ink font-medium">Funciones</h3>
+            <span class="font-mono text-[11px] text-muted group-hover:text-ink transition-colors">Ver código ↗</span>
+          </div>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Bloques reutilizables definidos con <code class="font-mono text-ink">def</code>, parámetros por defecto, retorno de valores y funciones <code class="font-mono text-ink">lambda</code>.
+          </p>
+        </button>
+
+        <button type="button" onclick="openPythonModal('objetos')"
+          class="p-5 bg-surface border border-line rounded-lg hover:bg-subtle transition-colors text-left space-y-1.5 cursor-pointer group sm:col-span-2">
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="font-mono text-xs text-ink font-medium">Objetos y Clases</h3>
+            <span class="font-mono text-[11px] text-muted group-hover:text-ink transition-colors">Ver código ↗</span>
+          </div>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Programación orientada a objetos con <code class="font-mono text-ink">class</code>, constructor <code class="font-mono text-ink">__init__</code>, atributos de instancia y métodos propios.
+          </p>
+        </button>
+      </div>
+    </section>
+
+    <hr class="border-line" />
+
+    <!-- =========================================================
+         02 · ESP32 CON C (ARDUINO) Y MICROPYTHON
+    ========================================================== -->
+    <section id="esp32" class="scroll-mt-24 reveal space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <span class="font-mono text-xs text-muted">02</span>
+          <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-0.5">ESP32: C (Arduino) y MicroPython</h2>
+        </div>
+        <a href="https://www.espressif.com/en/products/socs/esp32" target="_blank" rel="noopener noreferrer"
+           class="font-mono text-xs text-muted hover:text-ink border border-line bg-surface hover:bg-subtle px-3 py-1.5 rounded-md transition-colors self-start sm:self-auto">
+          espressif.com ↗
+        </a>
+      </div>
+
+      <p class="text-sm sm:text-base text-muted leading-relaxed">
+        Programación del microcontrolador ESP32 mediante dos entornos: <strong class="text-ink font-medium">C/C++ (framework Arduino)</strong> para ejecución compilada de bajo nivel y <strong class="text-ink font-medium">MicroPython</strong> para desarrollo interpretado interactivo directamente en el chip.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">C / C++ (Arduino)</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Control directo de periféricos GPIO, PWM, ADC, interrupciones por hardware y tiempos deterministas con bajo consumo de memoria.
+          </p>
+        </div>
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">MicroPython</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Consola REPL interactiva sobre UART/USB y acceso rápido a pines y protocolos (I2C, SPI, Wi-Fi) mediante el módulo <code class="font-mono text-ink">machine</code>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Selector plano de código -->
+      <div class="bg-surface border border-line rounded-lg overflow-hidden">
+        <div class="px-4 py-2 border-b border-line flex items-center justify-between">
+          <span class="font-mono text-[11px] text-muted">pwm_gpio2</span>
+          <div class="flex gap-1.5 font-mono text-[11px]">
+            <button type="button" onclick="switchEspTab('c')" id="tab-esp-c"
+              class="px-2.5 py-1 rounded bg-subtle text-ink border border-line transition-colors">
+              C (Arduino)
+            </button>
+            <button type="button" onclick="switchEspTab('py')" id="tab-esp-py"
+              class="px-2.5 py-1 rounded text-muted hover:text-ink transition-colors">
+              MicroPython
+            </button>
+          </div>
+        </div>
+
+        <div id="code-esp-c" class="p-4 font-mono text-xs text-ink/90 overflow-x-auto leading-relaxed">
+<pre><code>const int LED_PIN = 2;
+
+void setup() {
+  pinMode(LED_PIN, OUTPUT);
+}
+
+void loop() {
+  for (int duty = 0; duty &lt;= 255; duty += 5) {
+    analogWrite(LED_PIN, duty);
+    delay(20);
+  }
+}</code></pre>
+        </div>
+
+        <div id="code-esp-py" class="hidden p-4 font-mono text-xs text-ink/90 overflow-x-auto leading-relaxed">
+<pre><code>from machine import Pin, PWM
+import time
+
+pwm = PWM(Pin(2), freq=1000)
+
+while True:
+    for duty in range(0, 1024, 20):
+        pwm.duty(duty)
+        time.sleep_ms(20)</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <hr class="border-line" />
+
+    <!-- =========================================================
+         03 · PERCEPTRONES E IA CON REGRESIÓN LINEAL
+    ========================================================== -->
+    <section id="ia" class="scroll-mt-24 reveal space-y-6">
+      <div>
+        <span class="font-mono text-xs text-muted">03</span>
+        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-0.5">Perceptrones y Regresión Lineal</h2>
+      </div>
+
+      <p class="text-sm sm:text-base text-muted leading-relaxed">
+        Introducción a modelos supervisados básicos: el <strong class="text-ink font-medium">perceptrón</strong> como unidad neuronal de suma ponderada con función de activación, y la <strong class="text-ink font-medium">regresión lineal</strong> para ajustar una función continua minimizando el error cuadrático medio (MSE).
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-3">
+          <h3 class="font-mono text-xs text-ink font-medium">Formulación Matemática</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Cada entrada se multiplica por un peso sináptico y se suma un sesgo para generar la salida del modelo:
+          </p>
+          <div class="p-3 bg-base border border-line rounded font-mono text-xs text-ink space-y-1">
+            <div>Perceptrón: y = f(∑ wᵢ·xᵢ + b)</div>
+            <div>Regresión: &nbsp;ŷ = w·x + b</div>
+            <div>Costo MSE: &nbsp;(1/n) · ∑(yᵢ - ŷᵢ)²</div>
+          </div>
+        </div>
+
+        <!-- Ajuste interactivo minimalista -->
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-3">
+          <div class="flex items-center justify-between font-mono text-xs">
+            <span class="text-ink font-medium">Ajuste Lineal</span>
+            <span id="mse-badge" class="text-muted">MSE: 0.0</span>
+          </div>
+
+          <svg viewBox="0 0 300 140" class="w-full h-32 bg-base border border-line rounded">
+            <g id="data-points"></g>
+            <line id="model-line" x1="20" y1="120" x2="280" y2="20" stroke="#e4e4e7" stroke-width="1.5" />
+          </svg>
+
+          <div class="grid grid-cols-2 gap-3 font-mono text-[11px] text-muted">
+            <label class="block">
+              <div class="flex justify-between mb-1">
+                <span>w (pendiente)</span>
+                <span id="val-w" class="text-ink">0.80</span>
+              </div>
+              <input id="slider-w" type="range" min="0.1" max="1.6" step="0.05" value="0.80" class="w-full accent-zinc-300 cursor-pointer" />
+            </label>
+            <label class="block">
+              <div class="flex justify-between mb-1">
+                <span>b (sesgo)</span>
+                <span id="val-b" class="text-ink">10</span>
+              </div>
+              <input id="slider-b" type="range" min="-20" max="50" step="2" value="10" class="w-full accent-zinc-300 cursor-pointer" />
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="border-line" />
+
+    <!-- =========================================================
+         04 · HTML, CSS Y JAVASCRIPT
+    ========================================================== -->
+    <section id="web" class="scroll-mt-24 reveal space-y-6">
+      <div>
+        <span class="font-mono text-xs text-muted">04</span>
+        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-0.5">HTML, CSS y JavaScript</h2>
+      </div>
+
+      <p class="text-sm sm:text-base text-muted leading-relaxed">
+        Fundamentos para estructurar, estilizar y dotar de comportamiento interactivo a páginas web e interfaces de monitoreo en el navegador.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="p-5 bg-surface border border-line rounded-lg flex flex-col justify-between gap-4">
+          <div class="space-y-1.5">
+            <h3 class="font-mono text-xs text-ink font-medium">HTML</h3>
+            <p class="text-xs sm:text-sm text-muted leading-relaxed">
+              Estructura semántica del documento, etiquetas, enlaces y formularios.
+            </p>
+          </div>
+          <a href="https://www.w3schools.com/html/" target="_blank" rel="noopener noreferrer"
+             class="font-mono text-xs text-muted hover:text-ink transition-colors">
+            W3Schools HTML ↗
+          </a>
+        </div>
+
+        <div class="p-5 bg-surface border border-line rounded-lg flex flex-col justify-between gap-4">
+          <div class="space-y-1.5">
+            <h3 class="font-mono text-xs text-ink font-medium">CSS</h3>
+            <p class="text-xs sm:text-sm text-muted leading-relaxed">
+              Diseño visual, modelo de caja, Flexbox/Grid y adaptación responsiva.
+            </p>
+          </div>
+          <a href="https://www.w3schools.com/css/" target="_blank" rel="noopener noreferrer"
+             class="font-mono text-xs text-muted hover:text-ink transition-colors">
+            W3Schools CSS ↗
+          </a>
+        </div>
+
+        <div class="p-5 bg-surface border border-line rounded-lg flex flex-col justify-between gap-4">
+          <div class="space-y-1.5">
+            <h3 class="font-mono text-xs text-ink font-medium">JavaScript</h3>
+            <p class="text-xs sm:text-sm text-muted leading-relaxed">
+              Manipulación del DOM, manejo de eventos y lógica dinámica en cliente.
+            </p>
+          </div>
+          <a href="https://www.w3schools.com/js/" target="_blank" rel="noopener noreferrer"
+             class="font-mono text-xs text-muted hover:text-ink transition-colors">
+            W3Schools JS ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- Selector plano de código -->
+      <div class="bg-surface border border-line rounded-lg overflow-hidden">
+        <div class="px-4 py-2 border-b border-line flex items-center justify-between">
+          <span class="font-mono text-[11px] text-muted">ejemplo_web</span>
+          <div class="flex gap-1.5 font-mono text-[11px]">
+            <button type="button" onclick="switchWebTab('html')" id="tab-web-html"
+              class="px-2.5 py-1 rounded bg-subtle text-ink border border-line transition-colors">
+              HTML
+            </button>
+            <button type="button" onclick="switchWebTab('css')" id="tab-web-css"
+              class="px-2.5 py-1 rounded text-muted hover:text-ink transition-colors">
+              CSS
+            </button>
+            <button type="button" onclick="switchWebTab('js')" id="tab-web-js"
+              class="px-2.5 py-1 rounded text-muted hover:text-ink transition-colors">
+              JavaScript
+            </button>
+          </div>
+        </div>
+
+        <div id="code-web-html" class="p-4 font-mono text-xs text-ink/90 overflow-x-auto leading-relaxed">
+<pre><code>&lt;section class="sensor-card"&gt;
+  &lt;h3&gt;Lectura ESP32&lt;/h3&gt;
+  &lt;p id="valor"&gt;24.5 °C&lt;/p&gt;
+  &lt;button id="btn-actualizar"&gt;Actualizar&lt;/button&gt;
+&lt;/section&gt;</code></pre>
+        </div>
+
+        <div id="code-web-css" class="hidden p-4 font-mono text-xs text-ink/90 overflow-x-auto leading-relaxed">
+<pre><code>.sensor-card {
+  background-color: #111114;
+  border: 1px solid #232329;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.sensor-card button {
+  background-color: #18181c;
+  color: #f4f4f5;
+  padding: 6px 12px;
+}</code></pre>
+        </div>
+
+        <div id="code-web-js" class="hidden p-4 font-mono text-xs text-ink/90 overflow-x-auto leading-relaxed">
+<pre><code>const valorEl = document.getElementById('valor');
+const boton = document.getElementById('btn-actualizar');
+
+boton.addEventListener('click', () =&gt; {
+  const temp = (20 + Math.random() * 10).toFixed(1);
+  valorEl.textContent = `${temp} °C`;
+});</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <hr class="border-line" />
+
+    <!-- =========================================================
+         05 · AUTOR, UNIVERSIDAD DISTRITAL Y GITHUB
+    ========================================================== -->
+    <footer id="autor" class="scroll-mt-24 reveal pb-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div class="space-y-1">
+          <p class="text-sm font-medium text-ink">
+            Universidad Distrital Francisco José de Caldas
+          </p>
+          <p class="text-xs text-muted">
+            Ingeniería Electrónica · Programación Aplicada
+          </p>
+          <p class="font-mono text-xs text-muted pt-1">
+            Autor: <span class="text-ink">Ezequiel Jose Castilla Julio</span>
+          </p>
+        </div>
+
+        <a href="https://github.com/ezequiel-sudo" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2.5 px-4 py-2.5 bg-surface hover:bg-subtle border border-line rounded-md font-mono text-xs text-ink transition-colors self-start sm:self-auto">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+          </svg>
+          <span>github.com/ezequiel-sudo ↗</span>
+        </a>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- =========================================================
+       MODAL DE EJEMPLOS DE PYTHON
+  ========================================================== -->
+  <div id="python-modal" onclick="if (event.target === this) closePythonModal()"
+    class="hidden fixed inset-0 z-50 bg-base/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-surface border border-line rounded-lg overflow-hidden shadow-2xl">
+      <div class="px-4 py-3 border-b border-line flex items-center justify-between gap-3">
+        <span id="python-modal-title" class="font-mono text-xs text-ink font-medium"></span>
+        <div class="flex items-center gap-2">
+          <button type="button" id="python-copy-btn" onclick="copyPythonCode()"
+            class="px-2.5 py-1 rounded font-mono text-[11px] bg-subtle text-ink border border-line hover:bg-line transition-colors cursor-pointer">
+            Copiar código
+          </button>
+          <button type="button" onclick="closePythonModal()"
+            class="px-2 py-1 rounded font-mono text-xs text-muted hover:text-ink transition-colors cursor-pointer"
+            aria-label="Cerrar modal">
+            ✕
+          </button>
+        </div>
+      </div>
+      <pre class="p-4 font-mono text-xs text-ink/90 overflow-x-auto leading-relaxed max-h-[70vh]"><code id="python-modal-code"></code></pre>
+    </div>
+  </div>
+
+  <script>
+    // 1. Aparición suave al hacer scroll
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // 2. Slider Lateral Derecho (Scroll Spy + Hover en Óvalo)
+    const navItems = document.querySelectorAll('.dot-nav-item');
+    const sections = Array.from(navItems).map(item => document.getElementById(item.dataset.section));
+
+    navItems.forEach(item => {
+      const label = item.querySelector('.nav-label');
+      item.addEventListener('mouseenter', () => { label.textContent = item.dataset.full; });
+      item.addEventListener('mouseleave', () => { label.textContent = item.dataset.short; });
+    });
+
+    function updateActiveDot() {
+      const scrollPos = window.scrollY + window.innerHeight * 0.38;
+      let currentId = sections[0]?.id;
+
+      for (const sec of sections) {
+        if (sec && sec.offsetTop <= scrollPos) currentId = sec.id;
+      }
+
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
+        currentId = sections[sections.length - 1]?.id;
+      }
+
+      navItems.forEach(item => {
+        const label = item.querySelector('.nav-label');
+        if (item.dataset.section === currentId) {
+          item.classList.add('is-active');
+          if (!item.matches(':hover')) label.textContent = item.dataset.short;
+        } else {
+          item.classList.remove('is-active');
+        }
+      });
+
+      updateSectionBackground(currentId);
+    }
+
+    // 2b. Imagen de fondo lateral izquierdo por sección (reemplaza con tus rutas o URLs)
+    const sectionBackgrounds = {
+      inicio: 'img/inicio2.jpg',
+      python: 'img/python2.jpg',
+      esp32: 'img/esp322.jpg',
+      perceptron: 'img/perceptron.png',
+      web: 'img/web.jpg',
+      autor: 'img/autor.png'
+    };
+
+    let activeBgSection = null;
+    function updateSectionBackground(sectionId) {
+      if (sectionId === activeBgSection) return;
+      activeBgSection = sectionId;
+
+      const bgEl = document.getElementById('section-bg-left');
+      const imgUrl = sectionBackgrounds[sectionId];
+
+      if (imgUrl) {
+        bgEl.style.backgroundImage = `url('${imgUrl}')`;
+        bgEl.classList.remove('opacity-0');
+        bgEl.classList.add('opacity-100');
+      } else {
+        bgEl.classList.remove('opacity-100');
+        bgEl.classList.add('opacity-0');
+      }
+    }
+
+    window.addEventListener('scroll', updateActiveDot, { passive: true });
+    updateActiveDot();
+
+    // 3. Pestañas ESP32 (C vs MicroPython)
+    function switchEspTab(lang) {
+      const isC = lang === 'c';
+      document.getElementById('code-esp-c').classList.toggle('hidden', !isC);
+      document.getElementById('code-esp-py').classList.toggle('hidden', isC);
+
+      document.getElementById('tab-esp-c').className = isC
+        ? 'px-2.5 py-1 rounded bg-subtle text-ink border border-line transition-colors'
+        : 'px-2.5 py-1 rounded text-muted hover:text-ink transition-colors';
+
+      document.getElementById('tab-esp-py').className = !isC
+        ? 'px-2.5 py-1 rounded bg-subtle text-ink border border-line transition-colors'
+        : 'px-2.5 py-1 rounded text-muted hover:text-ink transition-colors';
+    }
+
+    // 3b. Pestañas Web (HTML vs CSS vs JavaScript)
+    function switchWebTab(lang) {
+      ['html', 'css', 'js'].forEach(item => {
+        const isActive = item === lang;
+        document.getElementById(`code-web-${item}`).classList.toggle('hidden', !isActive);
+        document.getElementById(`tab-web-${item}`).className = isActive
+          ? 'px-2.5 py-1 rounded bg-subtle text-ink border border-line transition-colors'
+          : 'px-2.5 py-1 rounded text-muted hover:text-ink transition-colors';
+      });
+    }
+
+    // 3c. Modal de ejemplos de Python
+    const pythonExamples = {
+      variables: {
+        title: 'tipos_variables.py',
+        code: `edad = 21                # int (entero)
+voltaje = 3.3            # float (decimal)
+nombre = "ESP32"         # str (cadena)
+activo = True            # bool (booleano)
+lectura = None           # NoneType (sin valor)
+
+print(type(edad), edad)
+print(type(voltaje), voltaje)
+print(type(nombre), nombre)
+print(type(activo), activo)
+print(type(lectura), lectura)`
+      },
+      operadores: {
+        title: 'operadores.py',
+        code: `a, b = 10, 3
+
+# Aritméticos
+print("Suma:", a + b, "| División entera:", a // b, "| Potencia:", a ** b)
+
+# Comparación
+print("¿a > b?:", a > b, "| ¿a == b?:", a == b)
+
+# Lógicos
+sensor_ok = True
+en_rango = (voltaje := 3.1) <= 3.3 and voltaje >= 0
+print("Sistema listo:", sensor_ok and en_rango)`
+      },
+      colecciones: {
+        title: 'colecciones.py',
+        code: `# Lista (mutable, ordenada)
+muestras = [10, 20, 30]
+muestras.append(40)
+
+# Tupla (inmutable, ordenada)
+coordenadas = (4.6097, -74.0817)
+
+# Set (sin duplicados, no ordenado)
+pines_usados = {2, 4, 2, 15}  # Resultado: {2, 4, 15}
+
+# Diccionario (clave: valor)
+sensor = {"nombre": "DHT22", "temp": 24.5, "activo": True}
+
+print("Lista:", muestras)
+print("Tupla:", coordenadas)
+print("Set:", pines_usados)
+print("Dict:", sensor["nombre"], sensor["temp"])`
+      },
+      condicionales: {
+        title: 'condicionales.py',
+        code: `temperatura = 32
+
+if temperatura < 18:
+    estado = "Frío"
+elif temperatura <= 28:
+    estado = "Normal"
+else:
+    estado = "Alerta por calor"
+
+print("Estado:", estado)
+
+# match / case (Python 3.10+)
+comando = "LEER"
+match comando:
+    case "INICIAR":
+        print("Iniciando muestreo...")
+    case "LEER":
+        print("Leyendo sensor...")
+    case _:
+        print("Comando desconocido")`
+      },
+      bucles: {
+        title: 'bucles.py',
+        code: `# Bucle for con range
+for i in range(1, 6):
+    if i == 3:
+        continue  # Salta el 3
+    print(f"Muestra #{i}")
+
+# Bucle while
+contador = 3
+while contador > 0:
+    print("Cuenta regresiva:", contador)
+    contador -= 1
+print("¡Listo!")`
+      },
+      funciones: {
+        title: 'funciones.py',
+        code: `def adc_a_voltaje(lectura, v_ref=3.3, resolucion=4095):
+    """Convierte un valor ADC a voltaje."""
+    return round((lectura / resolucion) * v_ref, 3)
+
+# Uso con argumento por defecto y con argumento explícito
+print("Voltaje 2048:", adc_a_voltaje(2048), "V")
+print("Voltaje 5V:", adc_a_voltaje(512, v_ref=5.0, resolucion=1023), "V")
+
+# Función lambda
+doble = lambda x: x * 2
+print("Doble de 7:", doble(7))`
+      },
+      objetos: {
+        title: 'objetos.py',
+        code: `class Sensor:
+    def __init__(self, nombre, pin):
+        self.nombre = nombre
+        self.pin = pin
+        self.lecturas = []
+
+    def registrar(self, valor):
+        self.lecturas.append(valor)
+
+    def promedio(self):
+        return sum(self.lecturas) / len(self.lecturas) if self.lecturas else 0
+
+temp_sensor = Sensor("LM35", pin=34)
+temp_sensor.registrar(24.2)
+temp_sensor.registrar(25.0)
+print(f"{temp_sensor.nombre} (GPIO {temp_sensor.pin}) -> Promedio: {temp_sensor.promedio():.2f} °C")`
+      }
+    };
+
+    function openPythonModal(topic) {
+      const data = pythonExamples[topic];
+      if (!data) return;
+      document.getElementById('python-modal-title').textContent = data.title;
+      document.getElementById('python-modal-code').textContent = data.code;
+      document.getElementById('python-copy-btn').textContent = 'Copiar código';
+      document.getElementById('python-modal').classList.remove('hidden');
+    }
+
+    function closePythonModal() {
+      document.getElementById('python-modal').classList.add('hidden');
+    }
+
+    function copyPythonCode() {
+      const code = document.getElementById('python-modal-code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('python-copy-btn');
+        btn.textContent = 'Copiado ✓';
+        setTimeout(() => {
+          btn.textContent = 'Copiar código';
+        }, 1500);
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePythonModal();
+    });
+
+    // 4. Gráfica de Regresión Lineal
+    const sampleData = [
+      { x: 20, y: 28 }, { x: 55, y: 56 }, { x: 90, y: 84 },
+      { x: 130, y: 118 }, { x: 170, y: 150 }, { x: 215, y: 186 }
+    ];
+
+    const pointsGroup = document.getElementById('data-points');
+    const modelLine = document.getElementById('model-line');
+    const sliderW = document.getElementById('slider-w');
+    const sliderB = document.getElementById('slider-b');
+
+    const toSvgX = (x) => 24 + (x / 240) * 252;
+    const toSvgY = (y) => 122 - (y / 220) * 102;
+
+    sampleData.forEach(pt => {
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', toSvgX(pt.x));
+      c.setAttribute('cy', toSvgY(pt.y));
+      c.setAttribute('r', '3.5');
+      c.setAttribute('fill', '#71717a');
+      pointsGroup.appendChild(c);
+    });
+
+    function updateRegression() {
+      const w = parseFloat(sliderW.value);
+      const b = parseFloat(sliderB.value);
+      document.getElementById('val-w').textContent = w.toFixed(2);
+      document.getElementById('val-b').textContent = b;
+
+      modelLine.setAttribute('x1', toSvgX(0));
+      modelLine.setAttribute('y1', toSvgY(b));
+      modelLine.setAttribute('x2', toSvgX(240));
+      modelLine.setAttribute('y2', toSvgY(w * 240 + b));
+
+      const mse = sampleData.reduce((acc, pt) => acc + Math.pow(pt.y - (w * pt.x + b), 2), 0) / sampleData.length;
+      document.getElementById('mse-badge').textContent = `MSE: ${mse.toFixed(1)}`;
+    }
+
+    sliderW.addEventListener('input', updateRegression);
+    sliderB.addEventListener('input', updateRegression);
+    updateRegression();
+  </script>
+</body>
+</html>
