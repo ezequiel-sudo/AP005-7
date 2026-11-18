@@ -159,9 +159,9 @@
       <span class="nav-label">02 · ESP32</span>
     </a>
 
-    <a href="#ia" data-section="ia" data-short="03 · IA" data-full="03 · Perceptrones y Regresión Lineal" class="dot-nav-item">
+    <a href="#perceptron" data-section="perceptron" data-short="03 · Perceptrón" data-full="03 · Neurona Artificial y Perceptrón" class="dot-nav-item">
       <span class="nav-dot-core w-1.5 h-1.5 rounded-full bg-muted shrink-0 transition-colors"></span>
-      <span class="nav-label">03 · IA</span>
+      <span class="nav-label">03 · Perceptrón</span>
     </a>
 
     <a href="#web" data-section="web" data-short="04 · Web" data-full="04 · HTML, CSS y JavaScript" class="dot-nav-item">
@@ -202,7 +202,7 @@
       </h1>
 
       <p class="text-base sm:text-lg text-muted leading-relaxed max-w-2xl">
-        Apuntes y síntesis técnica de los temas desarrollados en la asignatura: programación en Python, sistemas embebidos con ESP32, fundamentos de perceptrones con regresión lineal y desarrollo web básico.
+        Apuntes y síntesis técnica de los temas desarrollados en la asignatura: programación en Python, sistemas embebidos con ESP32, fundamentos de redes neuronales y perceptrones, y desarrollo web básico.
       </p>
 
       <div class="pt-2 flex flex-wrap gap-3 font-mono text-xs">
@@ -352,6 +352,51 @@
         </div>
       </div>
 
+      <!-- Desglose técnico del ESP32 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">Arquitectura y GPIO</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Microcontrolador de 3.3 V con pines configurables como entrada/salida digital, resistencias <code class="font-mono text-ink">pull-up</code> / <code class="font-mono text-ink">pull-down</code> internas e interrupciones por flanco (<code class="font-mono text-ink">RISING</code> / <code class="font-mono text-ink">FALLING</code>).
+          </p>
+        </div>
+
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">ADC y DAC (Señales Analógicas)</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Conversores ADC de 12 bits (<code class="font-mono text-ink">0–4095</code> niveles para <code class="font-mono text-ink">0–3.3 V</code>) para leer sensores analógicos, y canales DAC de 8 bits para generar salidas de voltaje continuo.
+          </p>
+        </div>
+
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">PWM (Modulación por Ancho de Pulso)</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Generación de señales cuadradas con frecuencia y ciclo de trabajo (<code class="font-mono text-ink">duty cycle</code>) ajustables para regular intensidad de LEDs, velocidad de motores y servomotores.
+          </p>
+        </div>
+
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">Buses: UART, I2C y SPI</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Comunicación serial por <code class="font-mono text-ink">UART</code> (depuración USB/PC), bus <code class="font-mono text-ink">I2C</code> (<code class="font-mono text-ink">SDA</code>/<code class="font-mono text-ink">SCL</code> para sensores y OLED) y <code class="font-mono text-ink">SPI</code> de alta velocidad para periféricos.
+          </p>
+        </div>
+
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">Conectividad Wi-Fi y BLE</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Radio integrada 2.4 GHz para operar en modo estación (<code class="font-mono text-ink">STA</code>) o punto de acceso (<code class="font-mono text-ink">AP</code>), publicar APIs HTTP/JSON, usar MQTT y comunicarse vía Bluetooth Low Energy.
+          </p>
+        </div>
+
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">Temporizadores y Bajo Consumo</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Ejecución no bloqueante con <code class="font-mono text-ink">millis()</code> o <code class="font-mono text-ink">ticks_ms()</code>, timers por hardware y modos <code class="font-mono text-ink">Deep Sleep</code> para aplicaciones alimentadas por batería.
+          </p>
+        </div>
+      </div>
+
       <!-- Selector plano de código -->
       <div class="bg-surface border border-line rounded-lg overflow-hidden">
         <div class="px-4 py-2 border-b border-line flex items-center justify-between">
@@ -400,59 +445,109 @@ while True:
     <hr class="border-line" />
 
     <!-- =========================================================
-         03 · PERCEPTRONES E IA CON REGRESIÓN LINEAL
+         03 · PERCEPTRÓN Y REDES NEURONALES ARTIFICIALES
     ========================================================== -->
-    <section id="ia" class="scroll-mt-24 reveal space-y-6">
+    <section id="perceptron" class="scroll-mt-24 reveal space-y-6">
       <div>
         <span class="font-mono text-xs text-muted">03</span>
-        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-0.5">Perceptrones y Regresión Lineal</h2>
+        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mt-0.5">Perceptrón y Redes Neuronales Artificiales</h2>
       </div>
 
       <p class="text-sm sm:text-base text-muted leading-relaxed">
-        Introducción a modelos supervisados básicos: el <strong class="text-ink font-medium">perceptrón</strong> como unidad neuronal de suma ponderada con función de activación, y la <strong class="text-ink font-medium">regresión lineal</strong> para ajustar una función continua minimizando el error cuadrático medio (MSE).
+        Unidad elemental de las redes neuronales artificiales inspirada en la neurona biológica: calcula una suma ponderada de sus entradas más un sesgo, aplica una <strong class="text-ink font-medium">función de activación escalón</strong> y ajusta sus parámetros mediante aprendizaje supervisado.
       </p>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="p-5 bg-surface border border-line rounded-lg space-y-3">
-          <h3 class="font-mono text-xs text-ink font-medium">Formulación Matemática</h3>
+      <!-- Desglose conceptual del Perceptrón -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">Neurona Biológica vs. Artificial</h3>
           <p class="text-xs sm:text-sm text-muted leading-relaxed">
-            Cada entrada se multiplica por un peso sináptico y se suma un sesgo para generar la salida del modelo:
+            En biología, las <strong class="text-ink font-medium">dendritas</strong> reciben señales, el <strong class="text-ink font-medium">soma</strong> las integra y el <strong class="text-ink font-medium">axón</strong> transmite impulsos mediante <strong class="text-ink font-medium">sinapsis</strong>. El perceptrón abstrae este proceso con entradas numéricas, pesos sinápticos y un umbral de disparo.
           </p>
-          <div class="p-3 bg-base border border-line rounded font-mono text-xs text-ink space-y-1">
-            <div>Perceptrón: y = f(∑ wᵢ·xᵢ + b)</div>
-            <div>Regresión: &nbsp;ŷ = w·x + b</div>
-            <div>Costo MSE: &nbsp;(1/n) · ∑(yᵢ - ŷᵢ)²</div>
-          </div>
         </div>
 
-        <!-- Ajuste interactivo minimalista -->
-        <div class="p-5 bg-surface border border-line rounded-lg space-y-3">
-          <div class="flex items-center justify-between font-mono text-xs">
-            <span class="text-ink font-medium">Ajuste Lineal</span>
-            <span id="mse-badge" class="text-muted">MSE: 0.0</span>
-          </div>
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">Entradas, Pesos y Sesgo (Bias)</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Cada entrada <code class="font-mono text-ink">xᵢ</code> se multiplica por su peso <code class="font-mono text-ink">wᵢ</code> para ponderar su influencia, mientras el sesgo <code class="font-mono text-ink">b</code> desplaza el umbral de decisión de forma análoga al término independiente en <code class="font-mono text-ink">y = mx + b</code>.
+          </p>
+        </div>
 
-          <svg viewBox="0 0 300 140" class="w-full h-32 bg-base border border-line rounded">
-            <g id="data-points"></g>
-            <line id="model-line" x1="20" y1="120" x2="280" y2="20" stroke="#e4e4e7" stroke-width="1.5" />
-          </svg>
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">Suma Ponderada y Activación Escalón</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Primero se acumula <code class="font-mono text-ink">z = ∑(wᵢ · xᵢ) + b</code>. Luego la función escalón genera una clasificación binaria: <code class="font-mono text-ink">y = 1</code> si <code class="font-mono text-ink">z ≥ 0</code>, y <code class="font-mono text-ink">y = 0</code> si <code class="font-mono text-ink">z &lt; 0</code>.
+          </p>
+        </div>
 
-          <div class="grid grid-cols-2 gap-3 font-mono text-[11px] text-muted">
-            <label class="block">
-              <div class="flex justify-between mb-1">
-                <span>w (pendiente)</span>
-                <span id="val-w" class="text-ink">0.80</span>
-              </div>
-              <input id="slider-w" type="range" min="0.1" max="1.6" step="0.05" value="0.80" class="w-full accent-zinc-300 cursor-pointer" />
-            </label>
-            <label class="block">
-              <div class="flex justify-between mb-1">
-                <span>b (sesgo)</span>
-                <span id="val-b" class="text-ink">10</span>
-              </div>
-              <input id="slider-b" type="range" min="-20" max="50" step="2" value="10" class="w-full accent-zinc-300 cursor-pointer" />
-            </label>
-          </div>
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">Error y Regla de Aprendizaje</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Partiendo de <code class="font-mono text-ink">wᵢ = b = 0</code>, se calcula el error con signo <code class="font-mono text-ink">e = t - y</code>. Si <code class="font-mono text-ink">e ≠ 0</code>, se corrigen los parámetros con tasa <code class="font-mono text-ink">η</code>: <code class="font-mono text-ink">Δwᵢ = η · e · xᵢ</code> y <code class="font-mono text-ink">Δb = η · e</code>.
+          </p>
+        </div>
+
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">Entrenamiento y Evaluación por Época</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Una época recorre todos los patrones. Durante el entrenamiento los pesos se actualizan en línea tras cada error; al final de la época se evalúan con parámetros fijos hasta lograr <code class="font-mono text-ink">0</code> errores.
+          </p>
+        </div>
+
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">Separabilidad Lineal (AND y OR)</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Un perceptrón encuentra una frontera lineal <code class="font-mono text-ink">w₁x₁ + w₂x₂ + b = 0</code> que separa dos clases, permitiéndole aprender compuertas lógicas como <code class="font-mono text-ink">AND</code> o <code class="font-mono text-ink">OR</code> a partir de ejemplos.
+          </p>
+        </div>
+      </div>
+
+      <!-- Código sencillo en Python -->
+      <div class="bg-surface border border-line rounded-lg overflow-hidden">
+        <div class="px-4 py-2 border-b border-line flex items-center justify-between">
+          <span class="font-mono text-[11px] text-muted">perceptron_and.py</span>
+          <button type="button" onclick="copyPerceptronPyCode()" id="perc-copy-btn"
+            class="px-2.5 py-1 rounded font-mono text-[11px] bg-subtle text-ink border border-line hover:bg-line transition-colors cursor-pointer">
+            Copiar código
+          </button>
+        </div>
+
+        <div class="p-4 font-mono text-xs text-ink/90 overflow-x-auto leading-relaxed">
+<pre><code id="code-perc-py"># Perceptrón simple: aprendizaje supervisado de la compuerta AND
+patrones = [
+    ([0, 0], 0),
+    ([0, 1], 0),
+    ([1, 0], 0),
+    ([1, 1], 1),
+]
+
+w1, w2, b = 0.0, 0.0, 0.0   # Pesos y sesgo iniciales
+eta = 0.2                   # Tasa de aprendizaje
+
+def activacion(z):
+    return 1 if z &gt;= 0 else 0
+
+for epoca in range(1, 21):
+    errores = 0
+    for (x1, x2), t in patrones:
+        z = w1 * x1 + w2 * x2 + b   # Suma ponderada
+        y = activacion(z)           # Predicción binaria
+        e = t - y                   # Error con signo
+
+        if e != 0:
+            w1 += eta * e * x1
+            w2 += eta * e * x2
+            b  += eta * e
+            errores += 1
+
+    if errores == 0:
+        print(f"Convergencia en época {epoca}: w1={w1:.1f}, w2={w2:.1f}, b={b:.1f}")
+        break
+
+# Evaluación final con los parámetros aprendidos
+for (x1, x2), t in patrones:
+    y = activacion(w1 * x1 + w2 * x2 + b)
+    print(f"Entrada ({x1}, {x2}) -&gt; Salida: {y} (Esperado: {t})")</code></pre>
         </div>
       </div>
     </section>
@@ -510,6 +605,51 @@ while True:
              class="font-mono text-xs text-muted hover:text-ink transition-colors">
             W3Schools JS ↗
           </a>
+        </div>
+      </div>
+
+      <!-- Desglose técnico de HTML, CSS y JavaScript -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">HTML · Semántica y Formularios</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Uso de etiquetas con significado (<code class="font-mono text-ink">&lt;header&gt;</code>, <code class="font-mono text-ink">&lt;main&gt;</code>, <code class="font-mono text-ink">&lt;section&gt;</code>, <code class="font-mono text-ink">&lt;footer&gt;</code>) y captura de datos mediante <code class="font-mono text-ink">&lt;form&gt;</code>, <code class="font-mono text-ink">&lt;input&gt;</code> y <code class="font-mono text-ink">&lt;button&gt;</code>.
+          </p>
+        </div>
+
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">CSS · Modelo de Caja (Box Model)</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Cada elemento es una caja compuesta por contenido, <code class="font-mono text-ink">padding</code>, <code class="font-mono text-ink">border</code> y <code class="font-mono text-ink">margin</code>. Con <code class="font-mono text-ink">box-sizing: border-box</code> el tamaño total incluye el relleno y el borde.
+          </p>
+        </div>
+
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">CSS · Flexbox y Grid</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            <code class="font-mono text-ink">display: flex</code> alinea elementos en una dimensión (filas o columnas), mientras <code class="font-mono text-ink">display: grid</code> organiza cuadrículas bidimensionales adaptables con <code class="font-mono text-ink">@media</code> queries.
+          </p>
+        </div>
+
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">JS · DOM y Eventos</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            El Document Object Model representa el HTML como un árbol de nodos. Con <code class="font-mono text-ink">querySelector()</code> y <code class="font-mono text-ink">addEventListener()</code> se responde a clics, entradas de teclado y scroll.
+          </p>
+        </div>
+
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">JS · Asincronía y Fetch API</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            Mediante <code class="font-mono text-ink">async / await</code> y <code class="font-mono text-ink">fetch()</code> se realizan peticiones HTTP sin bloquear la interfaz, ideal para leer datos JSON desde un servidor o un ESP32 en red local.
+          </p>
+        </div>
+
+        <div class="p-5 bg-surface border border-line rounded-lg space-y-1.5">
+          <h3 class="font-mono text-xs text-ink font-medium">Integración Web + Hardware</h3>
+          <p class="text-xs sm:text-sm text-muted leading-relaxed">
+            El navegador funciona como panel de control multiplataforma: muestra telemetría en tiempo real, grafica variables y envía comandos de actuación sin instalar software adicional.
+          </p>
         </div>
       </div>
 
@@ -876,47 +1016,17 @@ print(f"{temp_sensor.nombre} (GPIO {temp_sensor.pin}) -> Promedio: {temp_sensor.
       if (e.key === 'Escape') closePythonModal();
     });
 
-    // 4. Gráfica de Regresión Lineal
-    const sampleData = [
-      { x: 20, y: 28 }, { x: 55, y: 56 }, { x: 90, y: 84 },
-      { x: 130, y: 118 }, { x: 170, y: 150 }, { x: 215, y: 186 }
-    ];
-
-    const pointsGroup = document.getElementById('data-points');
-    const modelLine = document.getElementById('model-line');
-    const sliderW = document.getElementById('slider-w');
-    const sliderB = document.getElementById('slider-b');
-
-    const toSvgX = (x) => 24 + (x / 240) * 252;
-    const toSvgY = (y) => 122 - (y / 220) * 102;
-
-    sampleData.forEach(pt => {
-      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      c.setAttribute('cx', toSvgX(pt.x));
-      c.setAttribute('cy', toSvgY(pt.y));
-      c.setAttribute('r', '3.5');
-      c.setAttribute('fill', '#71717a');
-      pointsGroup.appendChild(c);
-    });
-
-    function updateRegression() {
-      const w = parseFloat(sliderW.value);
-      const b = parseFloat(sliderB.value);
-      document.getElementById('val-w').textContent = w.toFixed(2);
-      document.getElementById('val-b').textContent = b;
-
-      modelLine.setAttribute('x1', toSvgX(0));
-      modelLine.setAttribute('y1', toSvgY(b));
-      modelLine.setAttribute('x2', toSvgX(240));
-      modelLine.setAttribute('y2', toSvgY(w * 240 + b));
-
-      const mse = sampleData.reduce((acc, pt) => acc + Math.pow(pt.y - (w * pt.x + b), 2), 0) / sampleData.length;
-      document.getElementById('mse-badge').textContent = `MSE: ${mse.toFixed(1)}`;
+    // 4. Copiar código Python del Perceptrón
+    function copyPerceptronPyCode() {
+      const code = document.getElementById('code-perc-py').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('perc-copy-btn');
+        btn.textContent = 'Copiado ✓';
+        setTimeout(() => {
+          btn.textContent = 'Copiar código';
+        }, 1500);
+      });
     }
-
-    sliderW.addEventListener('input', updateRegression);
-    sliderB.addEventListener('input', updateRegression);
-    updateRegression();
   </script>
 </body>
 </html>
